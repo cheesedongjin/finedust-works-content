@@ -18,6 +18,14 @@ projects/<id>/media/           그 프로젝트의 이미지·GIF·영상
 
 새로 만들 때는 `projects/fdpt/project.json`을 복사해서 시작하세요.
 
+## 올리기 전에 미리 보기
+
+사이트 저장소의 `content/` 폴더에 이 저장소를 클론해 두면(사이트 저장소에서는 git이 무시합니다), 로컬 서버에서 `?content=local`을 붙여 푸시 전의 내용을 볼 수 있습니다.
+
+```
+http://localhost:8417/projects/?id=fdpt&content=local
+```
+
 ## project.json 필드
 
 | 필드 | 필수 | 설명 |
