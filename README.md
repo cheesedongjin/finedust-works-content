@@ -41,6 +41,7 @@ http://localhost:8417/projects/?id=fdpt&content=local
 | `tags`, `stack` |  | 문자열 배열 |
 | `cover` |  | `{ "src", "alt" }` 대표 이미지 |
 | `links` |  | `[{ "label", "url", "primary"? }]` — `primary`는 하나만 |
+| `github` |  | GitHub 저장소 URL. 입력한 프로젝트만 상세 페이지 상단에 GitHub 버튼 표시 |
 | `overview` | ✓ | `concept`, `motivation`, `highlights[]` |
 | `features` | ✓ | `[{ title, summary, media?, how, useCase, edge }]` |
 | `architecture` | ✓ | `intro`, `stack[]`, `diagram?`, `flow[]`, `decisions[]`, `algorithms[]` |
