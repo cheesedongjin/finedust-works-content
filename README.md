@@ -66,6 +66,8 @@ GIF는 `image`로 넣습니다. 짧은 동작 영상은 GIF보다 `mp4`(음소�
 
 ### 추가 탭 (`extras`)
 
+추가 탭의 제목(`extras[].title`)은 기본 탭과 일관되게 영어로 작성합니다. 예: `Playground`, `Gallery`, `Downloads`, `Runtime & Limitations`. 탭 안의 소제목과 본문은 기존 한국어 글쓰기 규칙을 따릅니다.
+
 | type | 내용 | 필드 |
 |---|---|---|
 | `playground` | 직접 조작하는 데모 (iframe) | `title`, `intro`, `src`, `aspect`(`"16 / 10"`), `note` |
