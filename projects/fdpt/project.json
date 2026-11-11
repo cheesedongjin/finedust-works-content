@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "id": "fdpt",
+  "name": "FdPT",
+  "fullName": "FineDust Presentation Tool",
+  "category": "software",
+  "status": "beta",
+  "version": "0.1.0",
+  "updated": "2026-11-11",
+  "tagline": "슬라이드가 곧 웹 애플리케이션이 되는 발표 도구",
+  "summary": "자유롭게 배치한 슬라이드 안에 웹 페이지, 직접 만든 위젯, 차트, 3D 모델, 실시간 투표를 넣고 그대로 발표합니다. 결과물은 오프라인에서도 열리는 HTML 파일 하나로 내보낼 수 있습니다.",
+  "tags": ["Web", "Presentation", "Interactive"],
+  "stack": ["React 18", "TypeScript", "Vite", "Zustand", "ECharts", "Three.js", "IndexedDB", "Node.js"],
+  "cover": {
+    "src": "media/editor-overview.webp",
+    "alt": "FdPT 편집기. 왼쪽 슬라이드 목록, 가운데 캔버스, 오른쪽 속성 패널"
+  },
+  "links": [
+    { "label": "에디터 열기", "url": "https://fdpt-editor.finedustworks.com/", "primary": true },
+    { "label": "예시 발표 JSON", "url": "https://fdpt-editor.finedustworks.com/examples/maker-workshop.fdpt.json" }
+  ],
+
+  "overview": {
+    "concept": "FdPT는 슬라이드를 정적인 그림이 아니라 **작은 웹 애플리케이션**으로 다룹니다. 요소마다 클릭 동작과 표시 조건을 붙이고, 슬라이드끼리 공유 변수를 주고받아 청중의 선택에 따라 발표 흐름이 달라집니다.\n\n편집기, 발표 모드, 내보낸 HTML이 모두 같은 플레이어 런타임을 쓰기 때문에 편집 중에 본 동작이 발표장에서도 그대로 재현됩니다.",
+    "motivation": "기존 발표 도구에서 웹 데모, 실시간 데이터, 청중 참여는 대부분 슬라이드 밖으로 나가야 하는 일입니다. 화면을 전환하는 순간 흐름이 끊기고, 발표가 끝나면 그 상호작용은 파일에 남지 않습니다.\n\nFdPT는 그 상호작용을 슬라이드 안으로 가져오는 것에서 출발했습니다. 발표 자체가 하나의 작동하는 결과물이 되도록 만드는 것이 목표입니다.",
+    "highlights": [
+      "웹 임베드와 sandbox 위젯을 슬라이드 요소로 배치",
+      "공유 변수와 조건부 표시로 만드는 비선형 발표 경로",
+      "휴대폰 리모컨과 실시간 투표",
+      "오프라인에서 동작하는 단일 HTML 내보내기"
+    ]
+  },
+
+  "features": [
+    {
+      "title": "인터랙티브 차트",
+      "summary": "CSV 데이터로 막대·선·원형 차트를 만들고, 발표 중에 계열을 바꾸거나 항목을 클릭해 값을 변수에 저장합니다.",
+      "media": { "type": "image", "src": "media/feature-chart.webp", "alt": "예산 비교 막대 차트와 재료비·운영비 전환 버튼이 있는 슬라이드", "caption": "버튼이 공유 변수를 바꾸면 차트의 표시 계열이 함께 바뀝니다." },
+      "how": "차트는 ECharts로 그립니다. `표시 계열 변수`가 가리키는 값에 따라 보이는 계열이 정해지고, `클릭 → 변수`를 설정하면 누른 항목 이름이 공유 변수에 저장됩니다. 차트의 `데이터 변수`는 CSV 문자열, 행 배열, 객체 배열을 모두 받습니다.",
+      "useCase": "예산이나 실험 결과를 청중과 함께 비교하면서, 고른 항목을 다음 슬라이드의 설명과 조건에 이어 쓰는 발표",
+      "edge": "차트가 다른 요소와 같은 상태를 공유하므로, 클릭 한 번이 슬라이드 전체의 흐름을 바꿉니다."
+    },
+    {
+      "title": "실시간 투표와 폼 응답",
+      "summary": "선택형, 복수선택, 날짜, 텍스트, 이미지·파일 첨부 질문을 슬라이드에 넣고 청중의 휴대폰으로 응답을 받습니다.",
+      "media": { "type": "image", "src": "media/feature-poll.webp", "alt": "관심 부스를 묻는 선택형 투표 슬라이드", "caption": "공개 집계는 슬라이드에 바로 반영되고, 텍스트와 첨부 원문은 발표자 화면에서만 봅니다." },
+      "how": "청중은 QR 코드로 투표 페이지에 접속하고, 응답은 릴레이를 거쳐 발표 화면으로 전달됩니다. 공개 집계는 공유 변수 `poll_<id>`에 저장되고, 받은 응답과 첨부는 IndexedDB의 응답 보관함에 회차별로 쌓입니다.",
+      "useCase": "워크숍에서 프로그램을 고르고, 가능한 날짜를 모으고, 스케치 사진을 함께 받는 참여형 진행",
+      "edge": "응답 원문은 청중 화면에 공개하지 않고, CSV와 첨부 포함 JSON으로 바로 내려받을 수 있습니다."
+    },
+    {
+      "title": "컴포넌트 시스템",
+      "summary": "자주 쓰는 요소 묶음을 마스터로 만들고, 인스턴스마다 `{{이름}}` 속성만 바꿔 재사용합니다.",
+      "media": { "type": "image", "src": "media/feature-components.webp", "alt": "같은 카드 컴포넌트 세 개가 나란히 놓인 프로그램 소개 슬라이드", "caption": "세 장의 프로그램 카드는 하나의 마스터에서 나온 인스턴스입니다." },
+      "how": "마스터를 수정하면 모든 인스턴스에 반영됩니다. 인스턴스를 분리하면 클릭 동작, 표시 조건, 속성 값이 보존된 채 일반 요소나 독립 그룹으로 돌아갑니다.",
+      "useCase": "같은 형식의 카드, 섹션 머리말, 버튼 묶음이 여러 장에 반복되는 발표",
+      "edge": "분리할 때 회전과 크기 조정까지 계산해 모양을 그대로 유지합니다."
+    },
+    {
+      "title": "3D 모델",
+      "summary": "GLB·glTF 모델을 슬라이드에 넣고 발표 중에 드래그로 회전하고 휠·핀치로 확대합니다.",
+      "media": { "type": "image", "src": "media/feature-3d.webp", "alt": "회전 가능한 피라미드 3D 모델이 있는 슬라이드", "caption": "자동 회전과 모델에 내장된 애니메이션 재생도 지원합니다." },
+      "how": "Three.js는 3D 요소가 처음 나타날 때만 불러옵니다. 3D가 있는 덱을 HTML로 내보내면 Three.js가 파일에 함께 들어가 오프라인에서도 동작합니다.",
+      "useCase": "제품 시안, 하드웨어 인클로저, 공간 구조를 청중이 직접 돌려 보는 발표",
+      "edge": "3D를 쓰지 않는 덱은 Three.js를 전혀 내려받지 않습니다."
+    },
+    {
+      "title": "웹 임베드",
+      "summary": "웹 페이지를 sandbox iframe으로 슬라이드에 넣고, 막힌 사이트에는 \"새 탭에서 열기\" 대체 링크를 보여 줍니다.",
+      "media": { "type": "image", "src": "media/feature-embed.webp", "alt": "행사 동선 안내 웹 페이지가 임베드된 슬라이드", "caption": "실제 웹 페이지를 슬라이드 안에서 그대로 조작합니다." },
+      "how": "임베드 URL은 http·https만 허용하도록 정화합니다. 내보낸 HTML에서는 iframe을 지연 로드해 첫 화면을 빠르게 엽니다.",
+      "useCase": "라이브 데모, 대시보드, 지도나 동선 안내를 화면 전환 없이 보여 주는 발표",
+      "edge": "발표 흐름을 끊지 않고 실제 서비스를 시연합니다."
+    },
+    {
+      "title": "발표자 화면",
+      "summary": "현재·다음 슬라이드, 발표자 노트, 타이머, 공유 변수, 리모컨 연결 상태를 한 화면에서 봅니다.",
+      "media": { "type": "image", "src": "media/presenter.webp", "alt": "현재 슬라이드, 다음 슬라이드, 노트, 타이머가 있는 발표자 화면", "caption": "청중 창은 BroadcastChannel로 발표자 화면과 동기화됩니다." },
+      "how": "발표자 화면에서 청중 창을 따로 열면 두 창이 같은 슬라이드와 공유 변수를 유지합니다. 리모컨 QR에는 비밀 키가 들어 있어 발표자만 슬라이드를 넘길 수 있습니다.",
+      "useCase": "노트와 시간을 보며 진행하고, 휴대폰으로 슬라이드를 넘기는 현장 발표",
+      "edge": "발표 중 바뀐 공유 변수를 확인하고 초기화할 수 있어 리허설과 본 발표를 오갈 때 편합니다."
+    }
+  ],
+
+  "architecture": {
+    "intro": "FdPT의 중심에는 **하나의 플레이어 런타임**이 있습니다. 편집기는 이 런타임을 화면에 띄우고, 발표 모드는 같은 런타임을 전체 화면으로 실행하며, 내보내기는 런타임 소스를 HTML 안에 그대로 넣습니다.",
+    "stack": [
+      { "layer": "Editor", "items": ["React 18", "TypeScript", "Zustand"], "why": "슬라이드·요소·히스토리를 하나의 스토어로 관리하고, 실행 취소와 자동 저장을 같은 흐름에서 처리합니다." },
+      { "layer": "Runtime", "items": ["ES5 Script", "postMessage", "Sandbox iframe"], "why": "import가 없는 단일 스크립트라서 편집기에서는 그대로 실행하고, 내보낼 때는 문자열로 인라인할 수 있습니다." },
+      { "layer": "Visualization", "items": ["ECharts", "Three.js"], "why": "필요할 때만 불러오는 별도 청크로 나눠 첫 로딩을 가볍게 유지합니다." },
+      { "layer": "Storage", "items": ["IndexedDB", "JSON"], "why": "덱, 버전 기록, 응답과 첨부를 브라우저 안에 저장합니다. 서버나 계정 없이 동작합니다." },
+      { "layer": "Network", "items": ["Node.js", "Server-Sent Events"], "why": "외부 패키지 없는 릴레이로 휴대폰 리모컨과 투표를 중계합니다." },
+      { "layer": "Build · Deploy", "items": ["Vite", "esbuild", "Render"], "why": "Vite 플러그인이 Three.js 진입점을 esbuild로 묶어 편집기와 내보내기가 같은 번들을 씁니다." }
+    ],
+    "diagram": {
+      "groups": [
+        { "title": "Editor", "nodes": [
+          { "id": "ui", "label": "편집기 UI", "note": "React" },
+          { "id": "store", "label": "덱 스토어", "note": "Zustand · 히스토리" },
+          { "id": "idb", "label": "IndexedDB", "note": "덱 · 버전 · 응답" }
+        ] },
+        { "title": "Runtime", "nodes": [
+          { "id": "runtime", "label": "플레이어 런타임", "note": "runtime.js" },
+          { "id": "widget", "label": "위젯 iframe", "note": "opaque origin" },
+          { "id": "libs", "label": "ECharts · Three.js", "note": "지연 로드" }
+        ] },
+        { "title": "Output", "nodes": [
+          { "id": "present", "label": "발표 · 발표자 · 청중 창", "note": "BroadcastChannel" },
+          { "id": "export", "label": "단일 HTML", "note": "런타임 인라인" }
+        ] },
+        { "title": "Network", "nodes": [
+          { "id": "relay", "label": "릴레이 서버", "note": "Node · SSE" },
+          { "id": "phone", "label": "휴대폰", "note": "리모컨 · 투표" },
+          { "id": "api", "label": "라이브 데이터 API", "note": "CORS 허용" }
+        ] }
+      ],
+      "edges": [
+        ["ui", "store"],
+        ["store", "idb"],
+        ["store", "runtime"],
+        ["runtime", "widget", "postMessage"],
+        ["runtime", "libs"],
+        ["runtime", "present"],
+        ["runtime", "export", "?raw"],
+        ["present", "relay", "SSE"],
+        ["phone", "relay", "POST"],
+        ["api", "runtime", "polling"]
+      ]
+    },
+    "flow": [
+      { "title": "편집", "body": "요소를 배치하고 동작·조건·공유 변수를 정합니다. 모든 변경은 스토어의 히스토리에 쌓이고 IndexedDB에 자동 저장됩니다." },
+      { "title": "실행", "body": "덱 JSON을 플레이어 런타임에 넘깁니다. 런타임은 요소를 그리고, 공유 상태를 관리하고, 클릭 동작과 조건을 평가합니다." },
+      { "title": "연결", "body": "위젯은 `window.fdpt` 브리지로, 휴대폰은 릴레이로, 외부 API는 주기적 요청으로 같은 공유 상태에 값을 씁니다." },
+      { "title": "내보내기", "body": "덱 JSON과 런타임, 덱이 실제로 쓰는 라이브러리만 하나의 HTML 파일에 담습니다." }
+    ],
+    "decisions": [
+      {
+        "title": "런타임을 하나로 통합",
+        "choice": "편집기·발표 모드·내보낸 HTML이 같은 `runtime.js`를 사용",
+        "alternatives": "편집기용 React 렌더러와 내보내기용 렌더러를 따로 유지",
+        "reason": "렌더러가 둘이면 위젯, 차트, 조건부 표시처럼 동작이 복잡한 요소일수록 결과가 어긋납니다. 하나로 두면 편집 중에 본 동작이 그대로 발표 결과가 됩니다."
+      },
+      {
+        "title": "위젯을 opaque origin에서 실행",
+        "choice": "`allow-same-origin` 없는 sandbox iframe과 postMessage 브리지",
+        "alternatives": "위젯 코드를 발표 페이지에 직접 삽입",
+        "reason": "사용자가 작성한 JS가 편집기 데이터나 저장소에 접근하지 못하게 막습니다. 부모는 `event.source`로 메시지를 보낸 프레임을 검증합니다."
+      },
+      {
+        "title": "서버 없는 저장",
+        "choice": "IndexedDB에 덱, 버전, 응답을 저장",
+        "alternatives": "계정 기반 서버 저장",
+        "reason": "설치나 가입 없이 바로 쓰는 도구를 목표로 했습니다. 대신 중요한 기록은 JSON과 CSV로 내려받도록 안내합니다."
+      },
+      {
+        "title": "의존성 없는 릴레이",
+        "choice": "Node 내장 모듈만 쓰는 SSE 릴레이",
+        "alternatives": "WebSocket 라이브러리나 외부 실시간 서비스",
+        "reason": "`npm run relay` 한 줄로 바로 띄울 수 있고, 휴대폰 브라우저에서도 별도 라이브러리 없이 연결됩니다."
+      }
+    ],
+    "algorithms": [
+      {
+        "title": "위젯 브리지 검증",
+        "body": "위젯은 불투명 origin에서 실행되므로 origin으로 발신자를 구분할 수 없습니다. 대신 메시지의 `event.source`가 해당 위젯 iframe의 `contentWindow`와 같은지 확인해, 다른 프레임이 보낸 메시지를 무시합니다.",
+        "code": "window.addEventListener('message', (e) => {\n  if (e.source !== frame.contentWindow) return; // only this widget's frame\n  handle(e.data);\n});"
+      },
+      {
+        "title": "쓰는 라이브러리만 인라인",
+        "body": "내보내기 전에 슬라이드와 컴포넌트의 모든 요소를 훑어 차트(ECharts, 약 1 MB)와 3D(Three.js, 약 0.7 MB)를 실제로 쓰는지 확인합니다. 쓰지 않는 라이브러리는 파일에 넣지 않습니다.",
+        "code": "const uses = (t) => all.some((e) => e.type === t);\nconst [echarts, three] = await Promise.all([\n  uses('chart') ? import('echarts/dist/echarts.min.js?raw') : '',\n  uses('model') ? import('virtual:fdpt-three') : '',\n]);"
+      },
+      {
+        "title": "휴대폰이 접속할 주소 고르기",
+        "body": "PC에는 Wi-Fi 외에도 VPN, Hyper-V, Docker 같은 가상 어댑터가 많습니다. 릴레이는 어댑터 이름과 사설 IP 대역으로 점수를 매겨, 휴대폰에서 닿을 가능성이 높은 주소를 QR 코드에 넣습니다.",
+        "code": "score = (isPhysical && !isVirtual ? 4 : 0)\n      + (isVirtual ? -4 : 0)\n      + (isPrivate(ip) ? 2 : 0);"
+      }
+    ]
+  },
+
+  "development": {
+    "intro": "FdPT는 설계 문서의 4단계 계획에 따라 만들었습니다. 각 단계는 앞 단계의 구조를 바꾸지 않고 기능을 더할 수 있도록 범위를 나눴습니다.",
+    "timeline": [
+      { "phase": "Stage 1", "title": "자유형 편집기 MVP", "body": "슬라이드 편집, 텍스트·도형·이미지·웹 임베드·동영상 요소, 드래그·크기 조절·회전·스냅, 발표 모드와 발표자 화면, JSON 저장과 HTML 내보내기까지 발표 도구의 기본기를 먼저 갖췄습니다." },
+      { "phase": "Stage 2", "title": "슬라이드를 앱으로", "body": "sandbox 위젯, 인터랙티브 차트, 자동 레이아웃, 클릭 동작과 조건부 표시, 슬라이드 간 공유 변수를 더했습니다. 이 단계에서 런타임을 하나로 합쳐 편집기와 내보내기의 동작을 맞췄습니다." },
+      { "phase": "Stage 3", "title": "현장에서 쓰는 기능", "body": "3D 모델, 라이브 데이터 소스, 휴대폰 리모컨과 실시간 투표, 컴포넌트 시스템, 버전 기록, 응답 보관함을 더했습니다. 15장 분량의 완성 예시 \"메이커 페어\"로 전체 기능을 한 흐름에서 검증했습니다." },
+      { "phase": "Stage 4", "title": "생태계 확장", "body": "다음 단계입니다. 범위는 설계 문서를 기준으로 정리하고 있습니다." }
+    ],
+    "challenges": [
+      {
+        "problem": "내보낸 HTML 안에서 런타임 코드가 `</script>`를 만나면 스크립트가 중간에 끊깁니다.",
+        "approach": "인라인하는 모든 스크립트에서 `</script`를 이스케이프하고, 덱 JSON은 `<`, U+2028, U+2029를 유니코드 이스케이프로 바꿔 넣습니다.",
+        "result": "사용자가 텍스트나 위젯에 어떤 문자열을 넣어도 내보낸 파일이 깨지지 않습니다."
+      },
+      {
+        "problem": "컴포넌트 인스턴스를 분리하면 회전과 크기 조정이 풀리면서 요소 위치가 어긋납니다.",
+        "approach": "인스턴스의 배율과 회전각으로 자식 요소의 중심점을 회전 변환하고, 바깥 동작·조건·속성은 상속 필드로 따로 보존합니다.",
+        "result": "분리 전후의 모양과 동작이 같습니다. 이 동작은 별도 테스트로 확인합니다."
+      },
+      {
+        "problem": "휴대폰이 QR 코드로 접속했는데 VPN이나 가상 어댑터 주소가 잡혀 연결되지 않습니다.",
+        "approach": "어댑터 이름과 IP 대역으로 후보 주소에 점수를 매기고, 그래도 틀리면 휴대폰용 주소를 직접 적을 수 있게 했습니다.",
+        "result": "대부분의 환경에서 첫 시도에 연결되고, 예외 상황에도 우회 방법이 있습니다."
+      },
+      {
+        "problem": "ECharts와 Three.js를 모두 기본으로 불러오면 편집기 첫 로딩이 무거워집니다.",
+        "approach": "두 라이브러리를 별도 청크로 나누고, 차트나 3D 요소가 처음 나타날 때 불러옵니다.",
+        "result": "쓰지 않는 기능의 비용을 내지 않습니다. 내보내기에서도 같은 기준을 적용합니다."
+      }
+    ],
+    "abandoned": [
+      {
+        "approach": "localStorage 자동 저장",
+        "why": "MVP에서는 localStorage에 덱을 저장했습니다. 버전 기록과 첨부 파일이 붙으면서 용량 한계에 닿아 IndexedDB로 옮겼고, 기존 데이터는 첫 실행 때 자동으로 이전합니다."
+      }
+    ],
+    "lessons": [
+      "렌더러는 하나일 때 가장 믿을 수 있습니다. 같은 결과를 두 곳에서 만들면 결국 어긋납니다.",
+      "사용자가 작성한 코드를 실행하는 기능은 처음부터 격리 구조로 설계해야 나중에 바꿀 일이 없습니다.",
+      "완성 예시를 직접 만들어 보면 기능 목록만으로는 보이지 않던 빈틈이 드러납니다."
+    ]
+  },
+
+  "changelog": {
+    "releases": [
+      {
+        "version": "0.1.0",
+        "date": "2026-11-11",
+        "title": "공개 베타",
+        "milestone": true,
+        "changes": [
+          { "type": "added", "text": "fdpt-editor.finedustworks.com 배포" },
+          { "type": "added", "text": "완성 예시 \"메이커 페어\" 15장과 예시 JSON 공개" },
+          { "type": "added", "text": "사이트맵과 robots.txt" }
+        ]
+      },
+      {
+        "version": "Stage 3",
+        "date": "2026-11-11",
+        "title": "고급 기능",
+        "changes": [
+          { "type": "added", "text": "GLB·glTF 3D 모델 요소" },
+          { "type": "added", "text": "라이브 데이터 소스와 `{{변수}}` 표시" },
+          { "type": "added", "text": "휴대폰 리모컨과 실시간 투표, LAN 릴레이" },
+          { "type": "added", "text": "컴포넌트 마스터·인스턴스와 분리" },
+          { "type": "added", "text": "버전 기록과 응답 보관함" },
+          { "type": "changed", "text": "저장소를 localStorage에서 IndexedDB로 전환, 기존 데이터 자동 이전" }
+        ]
+      },
+      {
+        "version": "Stage 2",
+        "date": "2026-11-10",
+        "title": "핵심 차별화",
+        "changes": [
+          { "type": "added", "text": "HTML/CSS/JS sandbox 위젯과 `window.fdpt` 브리지" },
+          { "type": "added", "text": "ECharts 인터랙티브 차트" },
+          { "type": "added", "text": "Flex·Grid 자동 레이아웃" },
+          { "type": "added", "text": "클릭 동작, 조건부 표시, 슬라이드 간 공유 변수" },
+          { "type": "changed", "text": "발표 모드와 내보낸 HTML이 같은 런타임을 사용하도록 통합" }
+        ]
+      },
+      {
+        "version": "Stage 1",
+        "date": "2026-11-10",
+        "title": "MVP",
+        "milestone": true,
+        "changes": [
+          { "type": "added", "text": "슬라이드 추가·복제·삭제·정렬과 발표자 노트" },
+          { "type": "added", "text": "텍스트·도형·이미지·웹 임베드·동영상 요소" },
+          { "type": "added", "text": "발표 모드, 발표자 화면, 청중 창 동기화" },
+          { "type": "added", "text": "JSON 저장·열기, 단일 HTML·PDF 내보내기" }
+        ]
+      }
+    ],
+    "roadmap": [
+      { "status": "next", "title": "Stage 4 — 생태계 확장", "body": "설계 문서의 다음 단계입니다. 세부 범위를 정리하고 있습니다." }
+    ]
+  },
+
+  "extras": [
+    {
+      "type": "playground",
+      "title": "Playground",
+      "intro": "실제 편집기를 이 페이지 안에서 바로 써 봅니다. 파일 메뉴의 \"완성 예시: 메이커 페어\"를 열면 모든 기능이 들어간 15장 발표를 볼 수 있습니다.",
+      "src": "https://fdpt-editor.finedustworks.com/",
+      "aspect": "16 / 10",
+      "note": "넓은 화면에서 가장 잘 보입니다. 작업 내용은 이 브라우저에만 저장됩니다."
+    },
+    {
+      "type": "gallery",
+      "title": "Gallery",
+      "items": [
+        { "src": "media/editor-overview.webp", "alt": "편집기 전체 화면", "caption": "편집기 — 슬라이드 목록, 캔버스, 속성 패널" },
+        { "src": "media/presenter.webp", "alt": "발표자 화면", "caption": "발표자 화면 — 다음 슬라이드, 노트, 타이머" },
+        { "src": "media/feature-chart.webp", "alt": "차트 슬라이드", "caption": "인터랙티브 차트와 계열 전환" },
+        { "src": "media/feature-poll.webp", "alt": "투표 슬라이드", "caption": "실시간 투표" },
+        { "src": "media/feature-components.webp", "alt": "컴포넌트 카드 슬라이드", "caption": "컴포넌트 인스턴스" },
+        { "src": "media/feature-3d.webp", "alt": "3D 모델 슬라이드", "caption": "3D 모델" },
+        { "src": "media/feature-embed.webp", "alt": "웹 임베드 슬라이드", "caption": "웹 임베드" }
+      ]
+    }
+  ]
+}

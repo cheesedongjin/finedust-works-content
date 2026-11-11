@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "categories": [
+    {
+      "id": "robotics",
+      "no": "01",
+      "name": "Robotics",
+      "summary": "작고 영리한 로봇. 액추에이터, 센서 퓨전, 제어 루프까지 직접 설계합니다."
+    },
+    {
+      "id": "devices",
+      "no": "02",
+      "name": "Tiny Devices",
+      "summary": "손바닥 위의 하드웨어. MCU 펌웨어, PCB, 인클로저, 저전력 IoT."
+    },
+    {
+      "id": "tools",
+      "no": "03",
+      "name": "Tools",
+      "summary": "반복을 없애는 도구. CLI, 에디터 확장, 워크플로 자동화, 개발자 경험."
+    },
+    {
+      "id": "agents",
+      "no": "04",
+      "name": "AI Agents",
+      "summary": "스스로 판단하고 도구를 쓰는 에이전트. LLM 오케스트레이션, MCP, 자동화 파이프라인."
+    },
+    {
+      "id": "software",
+      "no": "05",
+      "name": "Software",
+      "summary": "웹과 데스크톱, 모바일 앱. 작고 빠르며 오래 쓰기 좋은 제품을 만듭니다."
+    },
+    {
+      "id": "games",
+      "no": "06",
+      "name": "Games",
+      "summary": "입자처럼 흩어지고 모이는 경험. 인디 게임, 프로토타입, 인터랙티브 아트."
+    }
+  ],
+  "projects": ["fdpt"]
+}
