@@ -15,10 +15,8 @@
     "src": "media/editor-overview.webp",
     "alt": "FdPT 편집기. 왼쪽 슬라이드 목록, 가운데 캔버스, 오른쪽 속성 패널"
   },
-  "github": "https://github.com/FineDust-Works/FineDust-Presentation-Tool",
   "links": [
-    { "label": "에디터 열기", "url": "https://fdpt-editor.finedustworks.com/", "primary": true },
-    { "label": "예시 발표 JSON", "url": "https://fdpt-editor.finedustworks.com/examples/maker-workshop.fdpt.json" }
+    { "label": "에디터 열기", "url": "https://fdpt-editor.finedustworks.com/", "primary": true }
   ],
 
   "overview": {
