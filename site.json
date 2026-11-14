@@ -10,8 +10,8 @@
     {
       "id": "devices",
       "no": "02",
-      "name": "Tiny Devices",
-      "summary": "손바닥 위의 하드웨어. MCU 펌웨어, PCB, 인클로저, 저전력 IoT."
+      "name": "Tiny Objects",
+      "summary": "손바닥 위의 하드웨어. 임베디드 시스템부터 소형 기구와 일상용 비전원 액세서리까지 직접 설계하고 제작합니다."
     },
     {
       "id": "tools",
